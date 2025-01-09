@@ -16,8 +16,7 @@ function Dashboard() {
             <div className="row">
                 <div className="ms-3 align-iterm-center d-flex justify-content-between">
                 <h3 className="mb-0 h4 font-weight-bolder">Dashboard</h3>
-                {/* <Link to="/assets" className="mb-4 me-4"><i className="fa-solid fa-plus"></i> Add Assets</Link> */}
-                <Link className="btn btn-secondary me-4" to="/assets"><i className="fa-solid fa-plus"></i> Add Assets</Link>
+                <Link className="btn btn-secondary me-4" to="/assets"><i className="fa-solid fa-plus"></i> Create Assets</Link>
                 
                 </div>
                 <div className="col-xl-3 col-sm-6 mb-xl-0 mb-4">
