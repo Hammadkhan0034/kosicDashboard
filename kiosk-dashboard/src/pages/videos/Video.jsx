@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
-import { getAllPlaylists, addPlaylist, deletePlaylist, } from '../../components/services/api';
+import { getAllPlaylists, addPlaylist, deletePlaylist, updatePlaylist } from '../../components/services/api';
+import api from '../../components/services/api'
 import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import Footer from '../../components/Footer';
@@ -10,17 +11,28 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function Video() {
 
+  // Add asset to playlist states start 
+
+  const [assets, setAssets] = useState([]); 
+  const [showAddAssetModal, setShowAddAssetModal] = useState(false); 
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  
+  // Add asset to playlist states end 
+
+
   const [loading, setLoading] = useState(true);
   const [playlists, setPlaylists] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newPlaylist, setNewPlaylist] = useState({
     name: '',
-    type: 'host',
+    type: '',
     description: ''
   });
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editPlaylist, setEditPlaylist] = useState(null);
 
-
-  // Fetch ALL Playlist
+  // Fetch all playlists
   const fetchPlaylists = async () => {
     try {
       const data = await getAllPlaylists();
@@ -34,7 +46,7 @@ function Video() {
     }
   };
 
-  // ADD NEW PLAY LIST
+  // Add a new playlist
   const handleAddPlaylist = async () => {
     try {
       await addPlaylist(newPlaylist);
@@ -48,30 +60,27 @@ function Video() {
     }
   };
 
-
-  {/*--tables with Asset start-- */ }
-  const [showAssetModal, setShowAssetModal] = useState(false);
-  const [selectedAsset, setSelectedAsset] = useState(null);
-
-  const handleAssetClick = (asset) => {
-    console.log('Asset clicked:', asset);
-    setSelectedAsset(asset);
-    setShowAssetModal(true);
+  // Update a playlist
+  const handleUpdatePlaylist = async () => {
+    try {
+      await updatePlaylist(editPlaylist.id, editPlaylist);
+      setShowEditModal(false);
+      setEditPlaylist(null);
+      fetchPlaylists();
+      toast.success('Playlist updated successfully!');
+    } catch (error) {
+      console.error('Failed to update playlist:', error.message);
+      toast.error('Failed to update playlist!');
+    }
   };
 
-  const handleCloseModal = () => {
-    setShowAssetModal(false);
-    setSelectedAsset(null);
+  // Open edit modal with playlist details
+  const handleEditClick = (playlist) => {
+    setEditPlaylist(playlist);
+    setShowEditModal(true);
   };
-  {/*--tables with Asset End-- */ }
 
-
-  useEffect(() => {
-    fetchPlaylists();
-  }, []);
-
-
-  // Delete Playlist
+  // Delete a playlist
   const handleDeletePlaylist = async (id) => {
     try {
       await deletePlaylist(id);
@@ -80,13 +89,61 @@ function Video() {
     } catch (error) {
       toast.error('Error deleting playlist!');
     }
-  }
-
-  const handleEditClick = async() =>{
-
-  }
+  };
 
 
+
+  // ADD ASSET TO PLAYLIST
+  const fetchAssets = async () => {
+    try {
+      const response = await api.get('api/asset'); 
+      setAssets(response.data);
+      console.log("Assets available for selection:", response.data);
+    } catch (error) {
+      console.error('Failed to fetch assets:', error.message);
+      toast.error('Failed to fetch assets!');
+    }
+  };
+  
+  const handleAddAssetToPlaylist = async () => {
+    if (!selectedPlaylist || !selectedAsset) {
+      toast.error('Please select both a playlist and an asset!');
+      return;
+    }
+
+    try {
+      const response = await api.post('/playlist-asset/', {
+        playlist: selectedPlaylist,
+        asset: selectedAsset,
+      });
+      console.log("response add asset to playlist is", response);
+
+      // Check if the response is HTML (indicating an error or redirect)
+    if (response.data.includes("<html")) {
+      console.error("Received HTML instead of JSON:", response.data);
+      toast.error('Error adding asset to playlist!');
+      return;
+    }
+
+     // Assuming a success response is JSON
+     console.log('API response:', response.data);
+     toast.success('Asset added to playlist successfully!');
+     setShowAddAssetModal(false);
+
+      toast.success('Asset added to playlist successfully!');
+      setShowAddAssetModal(false);
+    } catch (error) {
+      console.error('Failed to add asset to playlist:', error.message);
+      toast.error('Failed to add asset to playlist!');
+    }
+  };
+
+  // END ASSET TO PLAYLIST
+
+  useEffect(() => {
+    fetchPlaylists();
+    fetchAssets();
+  }, []);
 
   return (
     <>
@@ -101,16 +158,24 @@ function Video() {
                   <h6 className="text-white ps-5" style={{ fontSize: '24px' }}>Playlist Details</h6>
                 </div>
                 <div className="card-body px-0 pb-2">
-                  <div className="text-end m-4">
+
+
+                <div className="m-4" style={{ display: "flex", justifyContent: "space-between" }}>                    <button
+                      className="btn btn-secondary"
+                      style={{ background: '#8B4513', color: '#fff', borderRadius: '5px' }}
+                      onClick={() => setShowAddAssetModal(true)}>
+                      Add Asset to Playlist
+                    </button>
+
                     <button
                       className="btn btn-secondary"
                       style={{ background: 'teal', color: '#fff', borderRadius: '5px' }}
                       onClick={() => setShowModal(true)}>
                       Add New Playlist
                     </button>
+
                   </div>
 
-                  {/* table Start */}
                   {loading && <Spinner />}
                   {!loading && (
                     <div>
@@ -118,12 +183,12 @@ function Video() {
                         <table className="table align-items-center mb-0" style={{ tableLayout: 'fixed', width: '100%' }}>
                           <thead>
                             <tr>
-                              <th style={{ width: '5%' }}>No</th>
-                              <th style={{ width: '20%' }}>Name</th>
-                              <th style={{ width: '20%' }}>Description</th>
-                              <th style={{ width: '15%' }} className="text-center">Type</th>
-                              <th style={{ width: '15%' }} className="text-center">Edit</th>
-                              <th style={{ width: '15%' }} className="text-center">Delete</th>
+                              <th>No</th>
+                              <th>Name</th>
+                              <th>Description</th>
+                              <th className="text-center">Type</th>
+                              <th className="text-center">Edit</th>
+                              <th className="text-center">Delete</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -131,41 +196,19 @@ function Video() {
                               <tr key={playlist.id}>
                                 <td>{index + 1}</td>
                                 <td>{playlist.name}</td>
-                                {/* <td> */}
-
-                                {/* {playlist.asset && playlist.asset.length > 0
-                                    ? playlist.asset.map((asset, assetIndex) => (
-                                      <span
-                                        key={assetIndex}
-                                        onClick={() => handleAssetClick(asset)}
-                                        style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}>
-                                        {asset.asset_id}
-                                      </span>
-                                    ))
-                                    : 'No Assets Available'}
-                                </td> */}
-
                                 <td className="text-center">{playlist.description}</td>
                                 <td className="text-center">{playlist.type}</td>
-
-
-                                <td>
-                                  <button style={{ background: "teal", border: "none", borderRadius: "5px", padding: "px" }}
-                                  onClick={() => handleEditClick()}>
-                                    <i className="fa-solid fa-edit" style={{ color: "#fff" }}></i>
+                                <td className="text-center">
+                                  <button
+                                    style={{ background: 'teal', border: 'none', borderRadius: '5px' }}
+                                    onClick={() => handleEditClick(playlist)}>
+                                    <i className="fa-solid fa-edit" style={{ color: '#fff' }}></i>
                                   </button>
                                 </td>
                                 <td className="text-center">
                                   <button
                                     onClick={() => handleDeletePlaylist(playlist.id)}
-                                    className="btn btn-sm btn-danger"
-                                    style={{
-                                      background: 'red',
-                                      border: 'none',
-                                      borderRadius: '5px',
-                                      padding: '5px',
-                                    }}
-                                  >
+                                    className="btn btn-sm btn-danger">
                                     <i className="fa-solid fa-trash"></i>
                                   </button>
                                 </td>
@@ -176,8 +219,6 @@ function Video() {
                       </div>
                     </div>
                   )}
-                  {/* table End with Table Modal */}
-
                 </div>
               </div>
             </div>
@@ -213,7 +254,92 @@ function Video() {
             </div>
           </div>
         )}
-        {/* Close Playlist Modal */}
+
+        {/* Edit Playlist Modal */}
+        {showEditModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h5>Edit Playlist</h5>
+              <input
+                type="text"
+                placeholder="Playlist Name"
+                value={editPlaylist.name}
+                onChange={(e) => setEditPlaylist({ ...editPlaylist, name: e.target.value })}
+              />
+              <input
+                type="text"
+                placeholder="Playlist Type"
+                value={editPlaylist.type}
+                onChange={(e) => setEditPlaylist({ ...editPlaylist, type: e.target.value })}
+              />
+              <textarea
+                placeholder="Description"
+                value={editPlaylist.description}
+                onChange={(e) => setEditPlaylist({ ...editPlaylist, description: e.target.value })}
+              />
+              <div className="modal-actions">
+                <button onClick={handleUpdatePlaylist} style={{ background: 'teal', color: '#fff' }}>Update</button>
+                <button onClick={() => setShowEditModal(false)} style={{ marginLeft: '10px' }}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+
+ {/* Add Asset to Playlist Modal Start */}
+ {showAddAssetModal && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h5>Add Asset to Playlist</h5>
+      <div>
+        <label>Select Playlist:</label>
+        <select
+          className="form-control"
+          value={selectedPlaylist}
+          onChange={(e) => setSelectedPlaylist(e.target.value)}
+        >
+          <option value="">-- Select Playlist --</option>
+          {playlists.map((playlist) => (
+            <option key={playlist.id} value={playlist.id}>
+              {playlist.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label>Select Asset:</label>
+        <select
+          className="form-control"
+          value={selectedAsset}
+          onChange={(e) => {
+            setSelectedAsset(e.target.value);
+            console.log("Selected Asset:", e.target.value); 
+          }}
+        >
+          <option value="">-- Select Asset --</option>
+          {assets.map((asset) => (
+            <option key={asset.id} value={asset.id}>
+              {asset.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="modal-actions">
+        <button onClick={handleAddAssetToPlaylist} style={{ background: 'teal', color: '#fff' }}>
+          Add
+        </button>
+        <button onClick={() => setShowAddAssetModal(false)} style={{ marginLeft: '10px' }}>
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+        {/* Add Asset to Playlist Modal End */}
+
+
+
       </main>
       <Footer />
       <ToastContainer />
