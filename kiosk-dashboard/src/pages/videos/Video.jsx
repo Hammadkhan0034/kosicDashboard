@@ -117,9 +117,6 @@ function Video() {
                       onClick={() => setShowModal(true)}>
                       Add New Playlist
                     </button>
-
-                    
-
                   </div>
 
                   {loading && <Spinner />}
@@ -135,6 +132,7 @@ function Video() {
                               <th className="text-center">Type</th>
                               <th className="text-center">Edit</th>
                               <th className="text-center">Delete</th>
+
                             </tr>
                           </thead>
                           <tbody>

@@ -62,6 +62,7 @@ console.log("asset are Available", data)
 
     try {
       await api.post('/add-assets-to-playlists/', payload);
+      console.log("Payload is", payload )
       toast.success('Assets successfully added to playlists!');
       setShowModal(false);
     } catch (error) {
@@ -131,7 +132,6 @@ console.log("asset are Available", data)
       <Footer />
 
       {/* Modal for Adding Assets */}
-
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
   <Modal.Header closeButton>
     <Modal.Title>Add Assets to Playlist</Modal.Title>
