@@ -11,7 +11,7 @@ import EditVideo from '../pages/videos/EditVideo';
 import Localspace from '../pages/localSpace/Localspace';
 import AddLocalspace from '../pages/localSpace/AddLocalspace';
 import EditLocalspace from '../pages/localSpace/EditLocalspace';
-import StoreSpecial from '../pages/storeSpecial/StoreSpecial';
+import AddAssetsToPlaylist from '../pages/storeSpecial/AddAssetsToPlaylist';
 import AddStoreSpecial from '../pages/storeSpecial/AddStoreSpecial';
 import EditStoreSpecial from '../pages/storeSpecial/EditStoreSpecial';
 import Assets from '../pages/Assets';
@@ -82,7 +82,7 @@ function AppRoutes() {
           }
         />
         <Route
-          path="/local-space"
+          path="/local-space/:playlistId"
           element={
             <ProtectedRoute>
               <Localspace />
@@ -109,7 +109,7 @@ function AppRoutes() {
           path="/store-special"
           element={
             <ProtectedRoute>
-              <StoreSpecial />
+              <AddAssetsToPlaylist />
             </ProtectedRoute>
           }
         />
@@ -137,6 +137,16 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/add-assets-to-playlist"
+          element={
+            <ProtectedRoute>
+              <AddAssetsToPlaylist />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </Router>
   );

@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../../src/components/services/api';
-import {useNavigate} from 'react-router-dom';
+import moon from "../components/images/moon.png";
+import sun from "../components/images/sun.png";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false); // Theme state
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
@@ -34,6 +36,29 @@ const Navbar = () => {
     navigate('/');
   };
 
+  ///////////////////////////
+  // 1/ 14/ 25
+  const toggleTheme = () => {
+    const newTheme = isDarkMode ? 'light' : 'dark';
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  
+    const newColor = newTheme === 'dark' ? '#121212' : '#ffffff';
+    console.log('Updating theme to:', newTheme, 'with color:', newColor);
+  
+    let themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeColorMeta) {
+      themeColorMeta.remove();
+    }
+    themeColorMeta = document.createElement('meta');
+    themeColorMeta.name = 'theme-color';
+    themeColorMeta.content = newColor;
+    document.head.appendChild(themeColorMeta);
+  };
+  
+  //////////////////////////////
+
   return (
     <>
       <nav
@@ -48,6 +73,14 @@ const Navbar = () => {
                 <label className="form-label">Type here...</label>
                 <input type="text" className="form-control" />
               </div>
+
+              <img
+                src={isDarkMode ? sun : moon}
+                alt={isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                style={{ cursor: 'pointer', width: '40px', height: '30px' }}
+                onClick={toggleTheme}
+              />
+
             </div>
             <ul className="navbar-nav d-flex align-items-center justify-content-end">
               <li className="nav-item d-flex align-items-center position-relative">
@@ -162,11 +195,16 @@ export default Navbar;
 // import React, { useState } from 'react';
 // import { Link } from 'react-router-dom';
 // import api from '../../src/components/services/api';
+// import {useNavigate} from 'react-router-dom';
+// import moon from "../components/images/moon.png"
+// import sun from "../components/images/sun.png"
+
 
 // const Navbar = () => {
 //   const [showDropdown, setShowDropdown] = useState(false);
 //   const [showModal, setShowModal] = useState(false);
 //   const [userInfo, setUserInfo] = useState(null);
+//   const navigate = useNavigate();
 
 //   const toggleDropdown = () => {
 //     setShowDropdown(!showDropdown);
@@ -190,7 +228,7 @@ export default Navbar;
 //   const handleLogout = () => {
 //     console.log('Logout clicked');
 //     localStorage.removeItem('authToken'); // Clear the auth token on logout
-//     // Add any additional logout logic here
+//     navigate('/');
 //   };
 
 //   return (
@@ -207,6 +245,10 @@ export default Navbar;
 //                 <label className="form-label">Type here...</label>
 //                 <input type="text" className="form-control" />
 //               </div>
+
+//               <img src= {moon} alt="Moon" style={{width:"40px", height: "30px"}} />
+//               <img src= {sun} alt="sun" style={{width:"40px", height: "30px"}} />
+
 //             </div>
 //             <ul className="navbar-nav d-flex align-items-center justify-content-end">
 //               <li className="nav-item d-flex align-items-center position-relative">
@@ -248,9 +290,8 @@ export default Navbar;
 //               <div className="modal-body">
 //                 {userInfo ? (
 //                   <div>
-//                     <p><strong>Name:</strong> {userInfo.name}</p>
 //                     <p><strong>Email:</strong> {userInfo.email}</p>
-//                     {/* Add more user info fields if available */}
+//                     <p><strong>Group:</strong> {userInfo.group.join(', ')}</p>
 //                   </div>
 //                 ) : (
 //                   <p>Loading user information...</p>
@@ -270,4 +311,6 @@ export default Navbar;
 // };
 
 // export default Navbar;
+
+
 
