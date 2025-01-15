@@ -30,7 +30,7 @@ if(showModal){
     try {
       const data = await getAllPlaylists();
       setPlaylists(data);
-      toast.success('Playlists loaded successfully!');
+      // toast.success('Playlists loaded successfully!');
     } catch (error) {
       console.error('Failed to fetch playlists:', error.message);
       toast.error('Failed to load playlists!');
@@ -43,7 +43,6 @@ if(showModal){
     setLoading(true);
     try {
       const data = await getAssets();
-console.log("asset are Available", data)
       setAssets(data);
     } catch (error) {
       console.error('Failed to fetch assets:', error);
@@ -111,14 +110,14 @@ console.log("asset are Available", data)
                       </thead>
                       <tbody>
                         <tr>
-                          <td>1</td>
+                          {/* <td>1</td>
                           <td>Manager</td>
                           <td>Organization</td>
                           <td className="text-center">4</td>
                           <td className="text-center">
                             <i className="fa-solid fa-pen-to-square fs-5 me-3"></i>
                             <i className="fa-solid fa-trash fs-5 me-3 text-danger"></i>
-                          </td>
+                          </td> */}
                         </tr>
                       </tbody>
                     </table>
