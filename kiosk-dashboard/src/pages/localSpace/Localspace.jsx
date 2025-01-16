@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
@@ -5,22 +6,65 @@ import Sidebar from '../../components/Sidebar';
 import Footer from '../../components/Footer';
 import api from '../../components/services/api';
 
+// Modal Component for playing video or viewing image
+const AssetModal = ({ isOpen, assetSrc, isVideo, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="modal fade show"
+      style={{ display: 'block', zIndex: 1050, marginLeft:"20%" }}
+      id="assetModal"
+      tabIndex="-1"
+      role="dialog"
+      aria-labelledby="assetModalLabel"
+      aria-hidden="true"
+    >
+      <div className="modal-dialog modal-lg" role="document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title" id="assetModalLabel">
+              {isVideo ? 'Video Player' : 'Image Viewer'}
+            </h5>
+            <button type="button" className="close" onClick={onClose} style={{marginLeft:"60%", borderRadius:"3px", background: "teal", color: "#ffff", border: "none"}}>
+              <span>&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            {isVideo ? (
+              <video controls width="100%" className="img-thumbnail">
+                <source src={assetSrc} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <img src={assetSrc} alt="Asset" className="img-thumbnail" width="100%" />
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function Localspace() {
   const { playlistId } = useParams();
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedAsset, setSelectedAsset] = useState(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [currentAsset, setCurrentAsset] = useState(null);
 
   useEffect(() => {
     const fetchAssets = async () => {
       try {
         const response = await api.get('/all_playlists_with_assets/');
-        console.log('API Response:', response.data);
-
         const playlist = response.data.find((item) => item.id === parseInt(playlistId));
 
         if (playlist) {
-          setAssets(playlist.asset);
+          const updatedAssets = playlist.asset.map((asset) => ({
+            ...asset,
+            uri: `https://storage.googleapis.com/gw_videostore/uploads/${asset.uri}`,
+          }));
+          setAssets(updatedAssets);
         } else {
           console.error(`Playlist with id ${playlistId} not found`);
           setAssets([]);
@@ -35,6 +79,16 @@ function Localspace() {
     fetchAssets();
   }, [playlistId]);
 
+  const openModal = (asset) => {
+    setCurrentAsset(asset);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setCurrentAsset(null);
+  };
+
   return (
     <>
       <Sidebar />
@@ -45,7 +99,7 @@ function Localspace() {
             <div className="col-12">
               <div className="card my-4">
                 <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                  <div className="border-radius-lg pt-4 pb-3" style={{background: "#3cb371"}}>
+                  <div className="border-radius-lg pt-4 pb-3" style={{ background: '#3ab371' }}>
                     <h6 className="text-white text-capitalize ps-3">Playlist Assets</h6>
                   </div>
                 </div>
@@ -62,9 +116,10 @@ function Localspace() {
                             <thead>
                               <tr>
                                 <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
-                                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Asset ID</th>
+                                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Asset_id</th>
+                                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Order</th>
                                 <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
-                                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thumbnail</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -72,16 +127,27 @@ function Localspace() {
                                 <tr key={asset.id}>
                                   <td>{index + 1}</td>
                                   <td>{asset.asset_id}</td>
+                                  <td>{asset.order}</td>
                                   <td>{asset.description}</td>
-                                  <td>
-                                    <button
-                                    
-                                      className="btn btn-primary btn-sm"
-                                      onClick={() => setSelectedAsset(asset)}
-                                    >
-                                      View Asset
-                                    </button>
-                                  </td>
+                                  <td  style={{cursor: "pointer"}}>
+                                    {asset.uri.endsWith('.mp4') ? (
+                                      <img style={{height:"10px"}}
+                                      src="https://via.placeholder.com/150?text=Video+Thumbnail"
+                                        alt="Video thumbnail"
+                                        className="img-thumbnail"
+                                        width="100"
+                                        onClick={() => openModal({ uri: asset.uri, isVideo: true })}
+                                      />
+                                    ) : (
+                                      <img style={{height:"40px"}}
+                                        src={asset.uri}
+                                        alt="Image thumbnail"
+                                        className="img-thumbnail"
+                                        width="100"
+                                        onClick={() => openModal({ uri: asset.uri, isVideo: false })}
+                                      />
+                                    )}
+                                  </td>                                
                                 </tr>
                               ))}
                             </tbody>
@@ -96,42 +162,19 @@ function Localspace() {
                   )}
                 </div>
               </div>
-
-              {/* Selected Asset Display */}
-              {selectedAsset && (
-                <div className="card mt-4">
-                  <div className="card-header">
-                    <h6 className="text-capitalize">Selected Asset Details</h6>
-                  </div>
-                  <div className="card-body">
-                    <h6>Asset ID: {selectedAsset.asset_id}</h6>
-                    <p>Description: {selectedAsset.description}</p>
-
-                    {selectedAsset.file}
-
-                    {selectedAsset.uri.endsWith('.mp4') ? (
-                      <video
-                        src={selectedAsset.uri}
-                        controls
-                        width="100%"
-                        className="img-thumbnail"
-                      />
-                    ) : (
-                      <img
-                        src={selectedAsset.uri}
-                        alt={selectedAsset.description}
-                        className="img-thumbnail"
-                        width="100%"
-                      />
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
       </main>
       <Footer />
+
+      {/* Asset Modal */}
+      <AssetModal
+        isOpen={isModalOpen}
+        assetSrc={currentAsset?.uri}
+        isVideo={currentAsset?.isVideo}
+        onClose={closeModal}
+      />
     </>
   );
 }

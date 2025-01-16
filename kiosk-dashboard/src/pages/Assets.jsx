@@ -159,7 +159,6 @@ function Assets() {
                                                     <th className="text-center">Asset</th>
                                                     <th className="text-center">Edit</th>
                                                     <th className="text-center">Delete</th>
-
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -190,15 +189,12 @@ function Assets() {
                                                                     </video>
                                                                 )}
                                                             </td>
-                                                           
                                                             <td>
                                                                 <button style={{background:"teal", border:"none", borderRadius:"5px", padding:"px"}}
                                                                     onClick={() => handleEditClick(asset)} >
                                                                     <i className="fa-solid fa-edit" style={{color:"#fff"}}></i>
                                                                 </button>                                                         
                                                             </td>
-                                                                
-
                                                             <td className="align-middle text-center">
                                                                 <button
                                                                     className="btn btn-sm btn-danger"
@@ -284,8 +280,6 @@ function Assets() {
         </div>
     </div>
 )}
-
-
 
                 {/* Preview Modal */}
                 {selectedAsset && (
