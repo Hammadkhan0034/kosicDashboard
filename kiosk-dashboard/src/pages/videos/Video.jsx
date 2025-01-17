@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllPlaylists, addPlaylist, deletePlaylist, updatePlaylist } from '../../components/services/api';
-import api from '../../components/services/api'
+// import api from '../../components/services/api'
 import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import Footer from '../../components/Footer';
@@ -136,14 +136,14 @@ function Video() {
                             {(playlists || []).map((playlist, index) => (
                               <tr key={playlist.id}>
                                 <td>{index + 1}</td>
-                                <u><td>
+                                <td>
                                     <Link
                                   to = {`/local-space/${playlist.id}`}
-                                      style={{ textDecoration: 'none', color: 'inherit' }}  
+                                      style={{ textDecoration: 'underline', color: 'inherit' }}  
                                     >
                                       {playlist.name}
                                     </Link>
-                                  </td></u>
+                                  </td>
 
                                 <td className="text-center">{playlist.description}</td>
                                 <td className="text-center">{playlist.type}</td>

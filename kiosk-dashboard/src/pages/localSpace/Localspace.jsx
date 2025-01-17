@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
@@ -44,7 +43,7 @@ const AssetModal = ({ isOpen, assetSrc, isVideo, onClose }) => {
       </div>
     </div>
   );
-};
+}
 
 function Localspace() {
   const { playlistId } = useParams();
@@ -64,6 +63,7 @@ function Localspace() {
             ...asset,
             uri: `https://storage.googleapis.com/gw_videostore/uploads/${asset.uri}`,
           }));
+          
           setAssets(updatedAssets);
         } else {
           console.error(`Playlist with id ${playlistId} not found`);
@@ -129,25 +129,27 @@ function Localspace() {
                                   <td>{asset.asset_id}</td>
                                   <td>{asset.order}</td>
                                   <td>{asset.description}</td>
-                                  <td  style={{cursor: "pointer"}}>
-                                    {asset.uri.endsWith('.mp4') ? (
-                                      <img style={{height:"10px"}}
-                                      src="https://via.placeholder.com/150?text=Video+Thumbnail"
-                                        alt="Video thumbnail"
-                                        className="img-thumbnail"
-                                        width="100"
-                                        onClick={() => openModal({ uri: asset.uri, isVideo: true })}
-                                      />
-                                    ) : (
-                                      <img style={{height:"40px"}}
-                                        src={asset.uri}
-                                        alt="Image thumbnail"
-                                        className="img-thumbnail"
-                                        width="100"
-                                        onClick={() => openModal({ uri: asset.uri, isVideo: false })}
-                                      />
-                                    )}
-                                  </td>                                
+
+                                  <td style={{ cursor: "pointer" }}>
+                                      {asset.uri.split('?')[0].endsWith('.mp4') ? (
+                                        <button style={{ height: "35px", color: "#ffff", background: "teal", fontSize: "15px" }}
+                                          src={`https://storage.googleapis.com/gw_videostore/uploads/${asset.uri.split('?')[0].replace('.mp4', '_thumbnail.png')}`}
+                                          alt="Video thumbnail"
+                                          className="img-thumbnail"
+                                          width="100"
+                                          onClick={() => openModal({ uri: asset.uri, isVideo: true })}
+                                        >View Asset</button>  
+                                      ) : (
+                                        <button
+                                          style={{ height: "35px", color: "#ffff", background: "teal", fontSize: "15px" }}
+                                          src={asset.uri}
+                                          alt="Image thumbnail"
+                                          className="img-thumbnail"
+                                          width="100"
+                                          onClick={() => openModal({ uri: asset.uri, isVideo: false })}
+                                        >View Asset</button>
+                                      )}
+                                    </td>
                                 </tr>
                               ))}
                             </tbody>
@@ -167,7 +169,6 @@ function Localspace() {
         </div>
       </main>
       <Footer />
-
       {/* Asset Modal */}
       <AssetModal
         isOpen={isModalOpen}
@@ -180,3 +181,4 @@ function Localspace() {
 }
 
 export default Localspace;
+

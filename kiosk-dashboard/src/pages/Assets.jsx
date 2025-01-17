@@ -142,11 +142,9 @@ function Assets() {
                                 <div className="card-body px-0 pb-2">
                                     <div className="text-end m-4">
                                         <button
-                                            // className="btn btn-secondary"
                                             style={{background:"teal",padding:"12",  color: "#fff", border:"none", borderRadius:"5px"}}
                                             data-bs-toggle="modal"
-                                            data-bs-target="#uploadModal"
-                                        >
+                                            data-bs-target="#uploadModal">
                                             + Upload Media
                                         </button>
                                     </div>
