@@ -9,6 +9,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import api from '../../components/services/api';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function AddAssetsToPlaylist() {
   const [showModal, setShowModal] = useState(false);
@@ -18,6 +19,8 @@ function AddAssetsToPlaylist() {
   const [selectedAssets, setSelectedAssets] = useState([]);
   const [loading, setLoading] = useState(false);
 
+
+  const navigate = useNavigate();
   useEffect(() => {
     fetchPlaylists();
 if(showModal){
@@ -64,6 +67,7 @@ if(showModal){
       console.log("Payload is", payload )
       toast.success('Assets successfully added to playlists!');
       setShowModal(false);
+      navigate('/video')
     } catch (error) {
       toast.error('Failed to add assets to playlists.');
       console.error('Error:', error);

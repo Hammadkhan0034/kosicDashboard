@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link ,useLocation } from 'react-router-dom';
+import { Link ,Links,useLocation } from 'react-router-dom';
 
 function Sidebar() {
     const location = useLocation();
@@ -66,6 +66,28 @@ function Sidebar() {
                     <span className="nav-link-text ms-1">Store Specials</span>
                     </Link>
                     </li>
+
+
+
+                    <li className="nav-item">
+                    <Link
+                        className={`nav-link ${isActive('/all-devices') ? 'active bg-gradient-dark text-white' : 'text-dark'}`}
+                        to="/all-devices"
+                    >
+                    <i className="material-symbols-rounded opacity-5">view_in_ar</i>                        
+                    <span className="nav-link-text ms-1">Devices</span>
+                    </Link>
+                    </li>
+
+
+
+
+                    {/* <li>
+                        <Links to= "/all-devices">
+                        Devices
+                        </Links>
+                        
+                    </li> */}
 
                 </ul>
             </div>
