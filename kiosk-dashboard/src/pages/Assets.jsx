@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
+import { Table, Button } from 'react-bootstrap';
 import Footer from '../components/Footer';
 import Spinner from '../components/Spinner';
 import { uploadAsset, getAssets, deleteAsset, updateAsset } from '../components/services/api';
@@ -13,7 +14,7 @@ function Assets() {
     const [description, setDescription] = useState('');
     const [uploading, setUploading] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [selectedAsset, setSelectedAsset] = useState(null); 
+    const [selectedAsset, setSelectedAsset] = useState(null);
 
     // For Edit Record states...
     const [editModalVisible, setEditModalVisible] = useState(false);
@@ -84,7 +85,7 @@ function Assets() {
     };
 
 
-/////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////
 
     // Edit Functionality
     const handleEditClick = (asset) => {
@@ -101,7 +102,7 @@ function Assets() {
         try {
             await updateAsset(editAssetId, { description: editDescription });
             toast.success('Asset updated successfully!');
-            fetchAssets(); 
+            fetchAssets();
             setEditModalVisible(false);
             setEditAssetId(null);
             setEditDescription('');
@@ -110,9 +111,9 @@ function Assets() {
             toast.error('Failed to update asset.');
         }
     };
-////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////
 
-// Handle asset click
+    // Handle asset click
     const handleAssetClick = (asset) => {
         setSelectedAsset(asset);
     };
@@ -134,26 +135,26 @@ function Assets() {
                             <div className="card my-4">
                                 <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                                     <div className="shadow-dark border-radius-lg pt-4 pb-3"
-                                        style={{border:"1px solid grey", background:"teal"}}>
-                                    
-                                        <h6 className="text-white ps-3" style={{fontSize:"24px"}}>All Assets Details</h6>
+                                        style={{ border: "1px solid grey", background: "teal" }}>
+
+                                        <h6 className="text-white ps-3" style={{ fontSize: "24px" }}>All Assets Details</h6>
                                     </div>
                                 </div>
                                 <div className="card-body px-0 pb-2">
                                     <div className="text-end m-4">
                                         <button
-                                            style={{background:"teal",padding:"12",  color: "#fff", border:"none", borderRadius:"5px"}}
+                                            style={{ background: "teal", padding: "12", color: "#fff", border: "none", borderRadius: "5px" }}
                                             data-bs-toggle="modal"
                                             data-bs-target="#uploadModal">
                                             + Upload Media
                                         </button>
                                     </div>
                                     <div className="table-responsive p-0">
-                                        <table className="table align-items-center mb-0">
+                                        <Table striped bordered hover className="align-items-center mb-0">
                                             <thead>
                                                 <tr>
-                                                    <th className='record'>No</th>
-                                                    <th className='record'>Description</th>
+                                                    <th className="record">No</th>
+                                                    <th className="record">Description</th>
                                                     <th className="text-center">Asset</th>
                                                     <th className="text-center">Edit</th>
                                                     <th className="text-center">Delete</th>
@@ -181,37 +182,54 @@ function Assets() {
                                                                         width="50"
                                                                         className="border-radius-lg"
                                                                         onClick={() => handleAssetClick(asset)}
-                                                                        style={{ cursor: 'pointer' }}>
-                                                                    
+                                                                        style={{ cursor: 'pointer' }}
+                                                                    >
                                                                         Your browser does not support the video tag.
                                                                     </video>
                                                                 )}
                                                             </td>
-                                                            <td>
-                                                                <button style={{background:"teal", border:"none", borderRadius:"5px", padding:"px"}}
-                                                                    onClick={() => handleEditClick(asset)} >
-                                                                    <i className="fa-solid fa-edit" style={{color:"#fff"}}></i>
-                                                                </button>                                                         
+                                                            
+                                                            <td className="text-center">
+                                                                <Button
+                                                                    variant="info"
+                                                                    className="btn-sm"
+                                                                    onClick={() => handleEditClick(asset)}
+                                                                    style={{
+                                                                        backgroundColor: 'teal',
+                                                                        border: 'none',
+                                                                        borderRadius: '5px',
+                                                                    }}
+                                                                >
+                                                                    <i className="fa-solid fa-edit" style={{ color: '#fff' }}></i>
+                                                                </Button>
                                                             </td>
+
+
                                                             <td className="align-middle text-center">
-                                                                <button
-                                                                    className="btn btn-sm btn-danger"
+                                                                <Button
+                                                                    variant="danger"
+                                                                    className="btn-sm"
                                                                     onClick={() => asset.id ? handleDelete(asset.id) : toast.warn('Asset ID is missing')}
-                                                                    style={{background:"red", border:"none", borderRadius:"5px", padding:"px"}}>
-                                                                        <i className="fa-solid fa-trash"></i>
-                                                                </button>
+                                                                    style={{
+                                                                        backgroundColor: 'red',
+                                                                        border: 'none',
+                                                                        borderRadius: '5px',
+                                                                    }}
+                                                                >
+                                                                    <i className="fa-solid fa-trash"></i>
+                                                                </Button>
                                                             </td>
                                                         </tr>
                                                     ))
                                                 ) : (
                                                     <tr>
-                                                        <td colSpan="4" className="text-center">
+                                                        <td colSpan="5" className="text-center">
                                                             No assets available.
                                                         </td>
                                                     </tr>
                                                 )}
                                             </tbody>
-                                        </table>
+                                        </Table>
                                     </div>
                                 </div>
                             </div>
@@ -235,7 +253,7 @@ function Assets() {
                                     placeholder="Description"
                                     value={description}
                                     onChange={handleDescriptionChange}
-                                    
+
                                 />
                             </div>
                             <div className="modal-footer">
@@ -248,36 +266,36 @@ function Assets() {
                 </div>
 
 
-             {/* Edit Modal */}
-{editModalVisible && (
-    <div className="modal show d-block" tabIndex="-1">
-        <div className="modal-dialog">
-            <div className="modal-content">
-                <div className="modal-header">
-                    <h5 className="modal-title">Edit Asset</h5>
-                    <button type="button" className="btn-close" onClick={() => setEditModalVisible(false)}></button>
-                </div>
-                <div className="modal-body">
-                    <input
-                        type="text"
-                        className="form-control mb-2"
-                        placeholder="Description"
-                        value={editDescription}
-                        onChange={(e) => setEditDescription(e.target.value)}
-                    />
-                </div>
-                <div className="modal-footer">
-                    <button
-                        className="btn btn-primary"
-                        onClick={handleEditSave}
-                    >
-                        Save Changes
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-)}
+                {/* Edit Modal */}
+                {editModalVisible && (
+                    <div className="modal show d-block" tabIndex="-1">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Edit Asset</h5>
+                                    <button type="button" className="btn-close" onClick={() => setEditModalVisible(false)}></button>
+                                </div>
+                                <div className="modal-body">
+                                    <input
+                                        type="text"
+                                        className="form-control mb-2"
+                                        placeholder="Description"
+                                        value={editDescription}
+                                        onChange={(e) => setEditDescription(e.target.value)}
+                                    />
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={handleEditSave}
+                                    >
+                                        Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Preview Modal */}
                 {selectedAsset && (

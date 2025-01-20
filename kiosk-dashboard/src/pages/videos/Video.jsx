@@ -10,6 +10,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import "./vedio.css";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { Table } from 'react-bootstrap';
+
+
 
 function Video() {
 
@@ -103,104 +106,112 @@ function Video() {
                   <h6 className="text-white ps-5" style={{ fontSize: '24px' }}>Playlist Details</h6>
                 </div>
                 <div className="card-body px-0 pb-2" style={{ display: "flex", justifyContent: "space-between" }}>
-                <button
-                      className="btn btn-secondary"
-                      style={{ background: '#8B4513', color: '#fff', borderRadius: '5px', }}
-                      onClick={() => navigate('/add-assets-to-playlist')}>
-                     Add assets to Playlist
-                    </button>
-                    <button
-                      className="btn btn-secondary"
-                      style={{ background: 'teal', color: '#fff', borderRadius: '5px', }}
-                      onClick={() => setShowModal(true)}>
-                      Add New Playlist
-                    </button>
-                  </div>
-                  {loading && <Spinner />}
-                  {!loading && (
-                    <div>
-                      <div className="table-responsive p-0">
-                        <table className="table align-items-center mb-0" style={{ tableLayout: 'fixed', width: '100%' }}>
-                          <thead>
-                            <tr>
-                              <th>No</th>
-                              <th>Name</th>
-                              <th>Description</th>
-                              <th className="text-center">Type</th>
-                              <th className="text-center">Edit</th>
-                              <th className="text-center">Delete</th>
-
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {(playlists || []).map((playlist, index) => (
-                              <tr key={playlist.id}>
-                                <td>{index + 1}</td>
-                                <td>
-                                    <Link
-                                  to = {`/local-space/${playlist.id}`}
-                                      style={{ textDecoration: 'underline', color: 'inherit' }}  
-                                    >
-                                      {playlist.name}
-                                    </Link>
-                                  </td>
-
-                                <td className="text-center">{playlist.description}</td>
-                                <td className="text-center">{playlist.type}</td>
-                                <td className="text-center">
-                                  <button
-                                    style={{ background: 'teal', border: 'none', borderRadius: '5px' }}
-                                    onClick={() => handleEditClick(playlist)}>
-                                    <i className="fa-solid fa-edit" style={{ color: '#fff' }}></i>
-                                  </button>
-                                </td>
-                                <td className="text-center">
-                                  <button
-                                    onClick={() => handleDeletePlaylist(playlist.id)}
-                                    className="btn btn-sm btn-danger">
-                                    <i className="fa-solid fa-trash"></i>
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  )}
+                  <button
+                    className="btn btn-secondary"
+                    style={{ background: '#8B4513', color: '#fff', borderRadius: '5px', }}
+                    onClick={() => navigate('/add-assets-to-playlist')}>
+                    Add assets to Playlist
+                  </button>
+                  <button
+                    className="btn btn-secondary"
+                    style={{ background: 'teal', color: '#fff', borderRadius: '5px', }}
+                    onClick={() => setShowModal(true)}>
+                    Add New Playlist
+                  </button>
                 </div>
+                {loading && <Spinner />}
+                {!loading && (
+                  <div>
+                    <div className="table-responsive p-0">
+                      <Table striped bordered hover responsive>
+                        <thead>
+                          <tr>
+                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Playlist ID</th>
+                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
+                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Type</th>
+                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Edit</th>
+                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {(playlists || []).map((playlist, index) => (
+                            <tr key={playlist.id}>
+                              {/* <td>{playlist.id}</td> */}
+                              <td>
+                                <Link
+                                  to={`/local-space/${playlist.id}`}
+                                  style={{ textDecoration: 'underline', color: 'teal' }}
+                                >
+                                  {playlist.id}
+                                </Link>
+                              </td>
+                              <td>{playlist.name}</td>
+                              <td>{playlist.description}</td>
+                              <td className="text-center">{playlist.type}</td>
+                              <td className="text-center">
+                                <button
+                                  style={{ background: 'teal', border: 'none', borderRadius: '5px' }}
+                                  onClick={() => handleEditClick(playlist)}
+                                >
+                                  <i className="fa-solid fa-edit" style={{ color: '#fff' }}></i>
+                                </button>
+                              </td>
+                              <td className="text-center">
+                                <button
+                                  onClick={() => handleDeletePlaylist(playlist.id)}
+                                  className="btn btn-sm btn-danger"
+                                >
+                                  <i className="fa-solid fa-trash"></i>
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
+        </div>
         {/* Add Playlist Modal */}
+
+
         {showModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h5>Add New Playlist</h5>
-              <input
-                type="text"
-                placeholder="Playlist Name"
-                value={newPlaylist.name}
-                onChange={(e) => setNewPlaylist({ ...newPlaylist, name: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="Playlist Type"
-                value={newPlaylist.type}
-                onChange={(e) => setNewPlaylist({ ...newPlaylist, type: e.target.value })}
-              />
-              <textarea
-                placeholder="Description"
-                value={newPlaylist.description}
-                onChange={(e) => setNewPlaylist({ ...newPlaylist, description: e.target.value })}
-              />
-              <div className="modal-actions">
-                <button onClick={handleAddPlaylist} style={{ background: 'teal', color: '#fff' }}>Add</button>
-                <button onClick={() => setShowModal(false)} style={{ marginLeft: '10px' }}>Cancel</button>
-              </div>
-            </div>
-          </div>
-        )}
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h5>Add New Playlist</h5>
+      <input
+        type="text"
+        placeholder="Playlist Name"
+        value={newPlaylist.name}
+        onChange={(e) => setNewPlaylist({ ...newPlaylist, name: e.target.value })}
+      />
+      <select
+        value={newPlaylist.type}
+        onChange={(e) => setNewPlaylist({ ...newPlaylist, type: e.target.value })}
+      >
+        <option value="" disabled>Select Playlist Type</option>
+        <option value="video">Video</option>
+        <option value="button1">button1</option>
+        <option value="button2">button2</option>
+        <option value="mainSliderMedia">mainSliderMedia</option>
+      </select>
+      <textarea
+        placeholder="Description"
+        value={newPlaylist.description}
+        onChange={(e) => setNewPlaylist({ ...newPlaylist, description: e.target.value })}
+      />
+      <div className="modal-actions">
+        <button onClick={handleAddPlaylist} style={{ background: 'teal', color: '#fff' }}>Add</button>
+        <button onClick={() => setShowModal(false)} style={{ marginLeft: '10px' }}>Cancel</button>
+      </div>
+    </div>
+  </div>
+)}
 
         {/* Edit Playlist Modal */}
         {showEditModal && (

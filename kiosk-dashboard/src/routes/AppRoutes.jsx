@@ -9,13 +9,9 @@ import Video from '../pages/videos/Video';
 import AddVideo from '../pages/videos/AddVideo';
 import EditVideo from '../pages/videos/EditVideo';
 import Localspace from '../pages/localSpace/Localspace';
-
 import AllDevices from '../pages/AllDevices';
 import SingleDevice from '../components/singleDevice/SingleDevice';
-
-
-
-
+import Device from '../components/device/Device';
 import AddLocalspace from '../pages/localSpace/AddLocalspace';
 import EditLocalspace from '../pages/localSpace/EditLocalspace';
 import AddAssetsToPlaylist from '../pages/storeSpecial/AddAssetsToPlaylist';
@@ -72,11 +68,6 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
-
-
-
-
         <Route 
         path='/all-devices'
         element={
@@ -85,20 +76,22 @@ function AppRoutes() {
           </ProtectedRoute>
         }
         />
-
-        <Route 
-        path='/signle-device'
-        element={
-          <ProtectedRoute>
-            <SingleDevice />
-          </ProtectedRoute>
-        }
-        />
-
-
-
-
-
+<Route
+  path="/single-device/:deviceId"
+  element={
+    <ProtectedRoute>
+      <SingleDevice />
+    </ProtectedRoute>
+  }
+/>
+<Route
+path='/device/:deviceID'
+element={
+  <ProtectedRoute>
+    <Device />
+  </ProtectedRoute>
+}
+/>
         <Route
           path="/add-video"
           element={
