@@ -123,6 +123,7 @@ function Video() {
                 {!loading && (
                   <div>
                     <div className="table-responsive p-0">
+                   
                       <Table striped bordered hover responsive>
                         <thead>
                           <tr>
@@ -236,8 +237,8 @@ function Video() {
                 onChange={(e) => setEditPlaylist({ ...editPlaylist, description: e.target.value })}
               />
               <div className="modal-actions">
-                <button onClick={handleUpdatePlaylist} style={{ background: 'teal', color: '#fff' }}>Update</button>
-                <button onClick={() => setShowEditModal(false)} style={{ marginLeft: '10px' }}>Cancel</button>
+                <button onClick={handleUpdatePlaylist} style={{ background: 'teal', color: '#fff', borderRadius: "5px", border: "none" }}>Update</button>
+                <button onClick={() => setShowEditModal(false)} style={{ marginLeft: '10px',  border: "1px solid teal", borderRadius: "5px"  }}>Cancel</button>
               </div>
             </div>
           </div>

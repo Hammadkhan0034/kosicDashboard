@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import "./addAssetsToPlaylist.css"
 import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import { getAllPlaylists, getAssets } from '../../components/services/api';
@@ -133,8 +134,84 @@ if(showModal){
       </main>
       <Footer />
 
-      {/* Modal for Adding Assets */}
+
+
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+  <Modal.Header closeButton>
+    <Modal.Title>Add Assets to Playlist</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <div className="d-flex flex-column">
+      <div className="mb-3">
+        <h5 className="text-center">Select Playlists</h5>
+        <div className="d-flex flex-wrap gap-3">
+          {playlists.map((playlist) => (
+            <div
+              key={playlist.id}
+              className={`p-3 border rounded ${selectedPlaylists.includes(playlist.id) ? 'border-primary' : ''}`}
+              onClick={() => {
+                setSelectedPlaylists((prev) =>
+                  prev.includes(playlist.id)
+                    ? prev.filter((id) => id !== playlist.id)
+                    : [...prev, playlist.id]
+                );
+              }}
+              style={{
+                cursor: "pointer",
+                backgroundColor: selectedPlaylists.includes(playlist.id)
+                  ? "#f0f9ff"
+                  : "#fff",
+              }}
+            >
+              <h6>{playlist.name}</h6>
+              <p className="mb-0">ID: {playlist.id}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div>
+        <h5 className="text-center">Select Assets</h5>
+        <div className="d-flex flex-wrap gap-3">
+          {assets.map((asset) => (
+            <div
+              key={asset.id}
+              className={`p-3 border rounded ${selectedAssets.includes(asset.id) ? 'border-primary' : ''}`}
+              onClick={() => {
+                setSelectedAssets((prev) =>
+                  prev.includes(asset.id)
+                    ? prev.filter((id) => id !== asset.id)
+                    : [...prev, asset.id]
+                );
+              }}
+              style={{
+                cursor: "pointer",
+                backgroundColor: selectedAssets.includes(asset.id)
+                  ? "#f0f9ff"
+                  : "#fff",
+              }}
+            >
+              <h6>{asset.name}</h6>
+              <p className="mb-0">{asset.type}</p>
+              <p className="mb-0">{asset.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowModal(false)}>
+      Close
+    </Button>
+    <Button variant="primary" onClick={handleAddAssetsToPlaylist} disabled={loading}>
+      {loading ? "Adding..." : "Add"}
+    </Button>
+  </Modal.Footer>
+</Modal>
+
+
+      {/* Modal for Adding Assets */}
+      {/* <Modal show={showModal} onHide={() => setShowModal(false)} centered>
   <Modal.Header closeButton>
     <Modal.Title>Add Assets to Playlist</Modal.Title>
   </Modal.Header>
@@ -207,7 +284,7 @@ if(showModal){
       {loading ? "Adding..." : "Add"}
     </Button>
   </Modal.Footer>
-</Modal>
+</Modal> */}
 
     </>
   );
