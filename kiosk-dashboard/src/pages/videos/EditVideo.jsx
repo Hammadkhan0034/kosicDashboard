@@ -24,7 +24,6 @@ function EditVideo() {
                                             <div className="col-md-3"></div>
                                             <div class="col-md-6">
                                                 <div class="input-group input-group-lg input-group-outline my-3 ms-3">
-                                                    {/* <label class="form-label">Play List Name</label> */}
                                                     <label class="form-label">Play List Name</label>
                                                     <input type="text" class="form-control form-control-lg" />
                                                 </div>

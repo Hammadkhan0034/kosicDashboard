@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import deleteImage from "../../components/images/delete.png";
 import editImage from "../../components/images/edit.png"
 
+
 const Device = () => {
     const { deviceID } = useParams();
     const [playlists, setPlaylists] = useState([]);
@@ -22,11 +23,26 @@ const Device = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [editPlaylist, setEditPlaylist] = useState(null);
 
-    // Mock assets data
-    const [assets] = useState([
-        { id: 1, name: "Asset 1" },
-        { id: 2, name: "Asset 2" },
-    ]);
+    const [accessRights, setAccessRights] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Fetch data from the API
+        const fetchAccessRights = async () => {
+            try {
+                const response = await api.get("/api/devices/device-group-playlist-types/access_rights"
+                );
+                setAccessRights(response.data);
+                console.log("Response of AccessRights is:", response)
+            } catch (error) {
+                console.error("Error fetching access rights:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAccessRights();
+    }, []);
 
     // Fetching playlists for the modal selection
     useEffect(() => {
@@ -107,21 +123,18 @@ const Device = () => {
             alert("Failed to delete playlist.");
         }
     };
-    ////////////////////////////////////////////////////
+    // Hadle Edit Playlist
     const handleEditPlaylist = (playlist) => {
         setEditPlaylist(playlist);
         setShowEditModal(true);
     };
-
-
     const handleUpdatePlaylist = async () => {
         try {
-            await api.put(
-                `http://35.227.175.189:8080/update_playlist/${editPlaylist.id}/`,
+            await api.put(`/update_playlist/${editPlaylist.id}/`,
                 editPlaylist
             );
             setShowEditModal(false);
-            alert("Playlist Added successfully!");
+            alert("Playlist Updated successfully!");
 
             // Update the playlist in the device 
             setDeviceData((prevData) => ({
@@ -137,9 +150,6 @@ const Device = () => {
 
         }
     };
-
-    /////////////////////////////////////////////////////
-
     // Extract playlist_data from deviceData
     const { playlist_data } = deviceData || {};
 
@@ -207,39 +217,41 @@ const Device = () => {
                         <div className="col-6">
                             <div className="card my-4">
                                 <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                                    <div className="border-radius-lg pt-4 pb-3" style={{ background: "#3a6fb3" }}>
-                                        <h6 className="text-white text-capitalize ps-3">Device Assets</h6>
+                                    <div
+                                        className="border-radius-lg pt-4 pb-3"
+                                        style={{ background: "#3a6fb3" }}>
+                                        <h5 className="text-white text-capitalize ps-3">
+                                            Device Group Playlist Types 
+                                        </h5>
                                     </div>
                                 </div>
                                 <div className="card-body px-0 pb-2">
-                                    <button
-                                        className="btn btn-secondary mb-3"
-                                        style={{ background: "teal", color: "#fff", borderRadius: "5px" }}
-                                    >
-                                        Add Asset
-                                    </button>
                                     <div className="table-responsive p-0">
                                         <Table striped bordered hover>
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Asset ID</th>
-                                                    <th>Asset Name</th>
+                                                    <th>Access Right</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {assets.length > 0 ? (
-                                                    assets.map((asset, index) => (
+                                                {loading ? (
+                                                    <tr>
+                                                        <td colSpan="2" className="text-center">
+                                                            Loading...
+                                                        </td>
+                                                    </tr>
+                                                ) : accessRights.length > 0 ? (
+                                                    accessRights.map((right, index) => (
                                                         <tr key={index}>
                                                             <td>{index + 1}</td>
-                                                            <td>{asset.id}</td>
-                                                            <td>{asset.name}</td>
+                                                            <td>{right}</td>
                                                         </tr>
                                                     ))
                                                 ) : (
                                                     <tr>
-                                                        <td colSpan="3" className="text-center">
-                                                            No assets available.
+                                                        <td colSpan="2" className="text-center">
+                                                            No access rights available.
                                                         </td>
                                                     </tr>
                                                 )}
@@ -249,6 +261,7 @@ const Device = () => {
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </main>
@@ -265,7 +278,7 @@ const Device = () => {
                             value={editPlaylist.name}
                             onChange={(e) => setEditPlaylist({ ...editPlaylist, name: e.target.value })}
                         />
-                        
+
                         <input
                             type="text"
                             placeholder="Playlist Type"

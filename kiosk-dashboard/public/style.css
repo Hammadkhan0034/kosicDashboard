@@ -1,0 +1,24 @@
+/* Default (light theme) */
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --navbar-bg: #f8f9fa;
+  }
+  
+  /* Dark theme */
+  :root[data-theme="dark"] {
+    --background-color: #121212;
+    --text-color: #ffffff;
+    --navbar-bg: #1f1f1f;
+  }
+  
+  /* Apply the theme variables */
+  body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
+  .navbar {
+    background-color: var(--navbar-bg) !important;
+  }
+  

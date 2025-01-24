@@ -12,6 +12,9 @@ import Localspace from '../pages/localSpace/Localspace';
 import AllDevices from '../pages/AllDevices';
 import SingleDevice from '../components/singleDevice/SingleDevice';
 import Device from '../components/device/Device';
+
+import Playlist from '../components/playlist/Playlist';
+
 import AddLocalspace from '../pages/localSpace/AddLocalspace';
 import EditLocalspace from '../pages/localSpace/EditLocalspace';
 import AddAssetsToPlaylist from '../pages/storeSpecial/AddAssetsToPlaylist';
@@ -23,7 +26,7 @@ import Login from '../pages/Login';
 
 
 function AppRoutes() {
- 
+
   return (
     <Router>
       <Routes>
@@ -33,7 +36,7 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Dashboard />
-             </ProtectedRoute>
+            </ProtectedRoute>
           }
         />
         <Route
@@ -68,30 +71,30 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-        <Route 
-        path='/all-devices'
-        element={
-          <ProtectedRoute>
-            <AllDevices />
-          </ProtectedRoute>
-        }
+        <Route
+          path='/all-devices'
+          element={
+            <ProtectedRoute>
+              <AllDevices />
+            </ProtectedRoute>
+          }
         />
-<Route
-  path="/single-device/:deviceId"
-  element={
-    <ProtectedRoute>
-      <SingleDevice />
-    </ProtectedRoute>
-  }
-/>
-<Route
-path='/device/:deviceID'
-element={
-  <ProtectedRoute>
-    <Device />
-  </ProtectedRoute>
-}
-/>
+        <Route
+          path="/single-device/:deviceId"
+          element={
+            <ProtectedRoute>
+              <SingleDevice />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/device/:deviceID'
+          element={
+            <ProtectedRoute>
+              <Device />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/add-video"
           element={
@@ -108,14 +111,15 @@ element={
             </ProtectedRoute>
           }
         />
+
         <Route
-          path="/local-space/:playlistId"
+          path='/playlist/:playlistId'
           element={
             <ProtectedRoute>
-              <Localspace />
+              <Playlist />
             </ProtectedRoute>
-          }
-        />
+          }/>
+      
         <Route
           path="/add-local-space"
           element={

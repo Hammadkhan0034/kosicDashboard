@@ -33,7 +33,6 @@ function Video() {
     fetchPlaylists();
   }, []);
 
-
   // Fetch all playlists
   const fetchPlaylists = async () => {
     try {
@@ -123,7 +122,6 @@ function Video() {
                 {!loading && (
                   <div>
                     <div className="table-responsive p-0">
-                   
                       <Table striped bordered hover responsive>
                         <thead>
                           <tr>
@@ -138,10 +136,9 @@ function Video() {
                         <tbody>
                           {(playlists || []).map((playlist, index) => (
                             <tr key={playlist.id}>
-                              {/* <td>{playlist.id}</td> */}
                               <td>
                                 <Link
-                                  to={`/local-space/${playlist.id}`}
+                                  to={`/playlist/${playlist.id}`}
                                   style={{ textDecoration: 'underline', color: 'teal' }}
                                 >
                                   {playlist.id}
@@ -153,16 +150,14 @@ function Video() {
                               <td className="text-center">
                                 <button
                                   style={{ background: 'teal', border: 'none', borderRadius: '5px' }}
-                                  onClick={() => handleEditClick(playlist)}
-                                >
+                                  onClick={() => handleEditClick(playlist)}>
                                   <i className="fa-solid fa-edit" style={{ color: '#fff' }}></i>
                                 </button>
                               </td>
                               <td className="text-center">
                                 <button
                                   onClick={() => handleDeletePlaylist(playlist.id)}
-                                  className="btn btn-sm btn-danger"
-                                >
+                                  className="btn btn-sm btn-danger">
                                   <i className="fa-solid fa-trash"></i>
                                 </button>
                               </td>
@@ -170,7 +165,6 @@ function Video() {
                           ))}
                         </tbody>
                       </Table>
-
                     </div>
                   </div>
                 )}
@@ -179,41 +173,38 @@ function Video() {
           </div>
         </div>
         {/* Add Playlist Modal */}
-
-
         {showModal && (
-  <div className="modal-overlay">
-    <div className="modal-content">
-      <h5>Add New Playlist</h5>
-      <input
-        type="text"
-        placeholder="Playlist Name"
-        value={newPlaylist.name}
-        onChange={(e) => setNewPlaylist({ ...newPlaylist, name: e.target.value })}
-      />
-      <select
-        value={newPlaylist.type}
-        onChange={(e) => setNewPlaylist({ ...newPlaylist, type: e.target.value })}
-      >
-        <option value="" disabled>Select Playlist Type</option>
-        <option value="video">Video</option>
-        <option value="button1">button1</option>
-        <option value="button2">button2</option>
-        <option value="mainSliderMedia">mainSliderMedia</option>
-      </select>
-      <textarea
-        placeholder="Description"
-        value={newPlaylist.description}
-        onChange={(e) => setNewPlaylist({ ...newPlaylist, description: e.target.value })}
-      />
-      <div className="modal-actions">
-        <button onClick={handleAddPlaylist} style={{ background: 'teal', color: '#fff' }}>Add</button>
-        <button onClick={() => setShowModal(false)} style={{ marginLeft: '10px' }}>Cancel</button>
-      </div>
-    </div>
-  </div>
-)}
-
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h5>Add New Playlist</h5>
+              <input
+                type="text"
+                placeholder="Playlist Name"
+                value={newPlaylist.name}
+                onChange={(e) => setNewPlaylist({ ...newPlaylist, name: e.target.value })}
+              />
+              <select
+                value={newPlaylist.type}
+                onChange={(e) => setNewPlaylist({ ...newPlaylist, type: e.target.value })}
+              >
+                <option value="" disabled>Select Playlist Type</option>
+                <option value="video">Video</option>
+                <option value="button1">button1</option>
+                <option value="button2">button2</option>
+                <option value="mainSliderMedia">mainSliderMedia</option>
+              </select>
+              <textarea
+                placeholder="Description"
+                value={newPlaylist.description}
+                onChange={(e) => setNewPlaylist({ ...newPlaylist, description: e.target.value })}
+              />
+              <div className="modal-actions">
+                <button onClick={handleAddPlaylist} style={{ background: 'teal',  color: '#fff', border: "none", borderRadius: "3px" }}>Add</button>
+                <button onClick={() => setShowModal(false)} style={{ marginLeft: '10px',  borderRadius: "3px" }}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Edit Playlist Modal */}
         {showEditModal && (
           <div className="modal-overlay">
@@ -238,7 +229,7 @@ function Video() {
               />
               <div className="modal-actions">
                 <button onClick={handleUpdatePlaylist} style={{ background: 'teal', color: '#fff', borderRadius: "5px", border: "none" }}>Update</button>
-                <button onClick={() => setShowEditModal(false)} style={{ marginLeft: '10px',  border: "1px solid teal", borderRadius: "5px"  }}>Cancel</button>
+                <button onClick={() => setShowEditModal(false)} style={{ marginLeft: '10px', border: "1px solid teal", borderRadius: "5px" }}>Cancel</button>
               </div>
             </div>
           </div>

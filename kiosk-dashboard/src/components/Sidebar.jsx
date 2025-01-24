@@ -1,6 +1,9 @@
 
 import React from 'react'
 import { Link ,Links,useLocation } from 'react-router-dom';
+import vedioImg from "../components/images/vedios.png"
+import deviceImg from "../components/images/devices.png"
+import dashboardImg from "../components/images/dashboard.png"
 
 function Sidebar() {
     const location = useLocation();
@@ -27,11 +30,13 @@ function Sidebar() {
                         className={`nav-link ${isActive('/') ? 'active bg-gradient-dark text-white' : 'text-dark'}`}
                         to="/"
                     > 
-                        <i className="material-symbols-rounded opacity-5">dashboard</i>
+                        <i > <img src={dashboardImg} alt=""  style={{width: "25px", height: "25px",}}/></i>
                         <span className="nav-link-text ms-1">Dashboard</span>
                     </Link>
                     </li>
-                    <li className="nav-item">
+
+                    {/* // main-device list */}
+                    {/* <li className="nav-item">
                     <Link
                         className={`nav-link ${isActive('/main') ? 'active bg-gradient-dark text-white' : 'text-dark'}`}
                         to="/main"
@@ -39,25 +44,29 @@ function Sidebar() {
                         <i className="material-symbols-rounded opacity-5">table_view</i>
                         <span className="nav-link-text ms-1">Main Page</span>
                     </Link>
+                    </li> */}
+
+                    <li className="nav-item">
+                    <Link
+                        className={`nav-link ${isActive('/all-devices') ? 'active bg-gradient-dark text-white' : 'text-dark'}`}
+                        to="/all-devices"
+                    >
+                        <i > <img src={deviceImg} alt=""  style={{width: "25px", height: "25px", color: "teal"}}/></i>
+                        <span className="nav-link-text ms-1">Devices</span>
+                    </Link>
                     </li>
+
+
                     <li className="nav-item">
                     <Link
                         className={`nav-link ${isActive('/video') ? 'active bg-gradient-dark text-white' : 'text-dark'}`}
                         to="/video"
                     >
-                        <i className="material-symbols-rounded opacity-5">receipt_long</i>
+                        <i > <img src={vedioImg} alt=""  style={{width: "25px", height: "25px", color: "teal"}}/></i>
                         <span className="nav-link-text ms-1">Video</span>
                     </Link>
                     </li>
-                    <li className="nav-item">
-                    <Link
-                        className={`nav-link ${isActive('/local-space') ? 'active bg-gradient-dark text-white' : 'text-dark'}`}
-                        to="/local-space"
-                    >
-                        <i className="material-symbols-rounded opacity-5">view_in_ar</i>
-                        <span className="nav-link-text ms-1">Local Specials</span>
-                    </Link>
-                    </li>
+                   
                     <li className="nav-item">
                     <Link
                         className={`nav-link ${isActive('/store-special') ? 'active bg-gradient-dark text-white' : 'text-dark'}`}
@@ -68,20 +77,15 @@ function Sidebar() {
                     </Link>
                     </li>
 
-
-
                     <li className="nav-item">
                     <Link
-                        className={`nav-link ${isActive('/all-devices') ? 'active bg-gradient-dark text-white' : 'text-dark'}`}
-                        to="/all-devices"
+                        className={`nav-link ${isActive('/local-space') ? 'active bg-gradient-dark text-white' : 'text-dark'}`}
+                        to="/local-space"
                     >
-                    <i className="material-symbols-rounded opacity-5">view_in_ar</i>                        
-                    <span className="nav-link-text ms-1">Devices</span>
+                        <i className="material-symbols-rounded opacity-5">view_in_ar</i>
+                        <span className="nav-link-text ms-1">Local Specials</span>
                     </Link>
                     </li>
-
-
-
 
                     {/* <li>
                         <Links to= "/all-devices">
